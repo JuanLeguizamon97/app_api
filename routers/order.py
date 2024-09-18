@@ -1,31 +1,53 @@
 from fastapi import FastAPI, Depends, Path, Query, APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from config.database import Session
+from sqlalchemy.orm import Session
+from config.database import get_db
 from models.order import Order as OrderModel
-from middlewares. jwt_bearer import JWTBearer
+from middlewares.jwt_bearer import JWTBearer
 from services.order import create_order, get_order, get_orders, delete_order
 from schemas.order import OrderCreate, OrderResponse
-from config.database import get_db
 
-order_router = APIRouter()
+order_router = APIRouter(
+    prefix="/orders",
+    tags=["orders"],
+    dependencies=[Depends(JWTBearer())]  # Protección JWT en todas las rutas
+)
 
-@order_router.post("/orders/", response_model=OrderResponse)
+# Crear una nueva orden
+@order_router.post("/", response_model=OrderResponse, status_code=201)
 def create_new_order(order: OrderCreate, db: Session = Depends(get_db)):
-    return create_order(db, order)
+    try:
+        new_order = create_order(db, order)
+        return new_order
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-@order_router.get("/orders/{order_id}", response_model=OrderResponse)
+# Obtener una orden por su ID
+@order_router.get("/{order_id}", response_model=OrderResponse)
 def read_order(order_id: int, db: Session = Depends(get_db)):
     db_order = get_order(db, order_id)
-    if db_order is None:
+    if not db_order:
         raise HTTPException(status_code=404, detail="Order not found")
     return db_order
 
-@order_router.get("/orders/", response_model=list[OrderResponse])
+# Obtener todas las órdenes
+@order_router.get("/", response_model=list[OrderResponse])
 def read_orders(db: Session = Depends(get_db)):
-    return get_orders(db)
+    orders = get_orders(db)
+    if not orders:
+        raise HTTPException(status_code=404, detail="No orders found")
+    return orders
 
-@order_router.delete("/orders/{order_id}")
+# Eliminar una orden por su ID
+@order_router.delete("/{order_id}", status_code=204)
 def delete_existing_order(order_id: int, db: Session = Depends(get_db)):
-    delete_order(db, order_id)
-    return {"msg": "Order deleted"}
+    db_order = get_order(db, order_id)
+    if not db_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    try:
+        delete_order(db, order_id)
+        return JSONResponse(status_code=204, content=None)  # No content response
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
