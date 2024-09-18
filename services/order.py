@@ -1,24 +1,26 @@
-from models.order import Order as OrderModel
-from schemas.order import Order
+from sqlalchemy.orm import Session
+from models.order import Order
+from schemas.order import OrderCreate
 
-class OrderService():
+def create_order(db: Session, order: OrderCreate):
+    db_order = Order(
+        restaurant_id=order.restaurant_id,
+        items=order.items,
+        total_price=order.total_price
+    )
+    db.add(db_order)
+    db.commit()
+    db.refresh(db_order)
+    return db_order
 
-    def __init__(self, db) -> None:
-        self.db = db
+def get_order(db: Session, order_id: int):
+    return db.query(Order).filter(Order.id == order_id).first()
 
-    def get_orders(self, id):
-        result = self.db.query(OrderModel).filter(OrderModel.id == id).all()
-        return result
-    
-    def create_movie(self, order: Order):
-        new_order = OrderModel(**order.model_dump())
-        self.db.add(new_order)
-        self.db.commit()
+def get_orders(db: Session):
+    return db.query(Order).all()
 
-    def update_order(self, id:int, data: Order):
-        order =self.db.query(OrderModel).filter(OrderModel.id == id).first()
-        ##Methods to update orders
-
-    def cancel_order(self, id:int):
-        self.db.query(OrderModel).filter(OrderModel.id == id).delete()
-        self.db.commit()
+def delete_order(db: Session, order_id: int):
+    order = db.query(Order).filter(Order.id == order_id).first()
+    if order:
+        db.delete(order)
+        db.commit()

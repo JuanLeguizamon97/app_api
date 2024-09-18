@@ -1,7 +1,23 @@
-from pydantic import BaseModel, Field
-from typing import Optional, List
+from pydantic import BaseModel
+from typing import List, Dict
 
-class Order(BaseModel):
+class OrderItem(BaseModel):
+    item_id: int
+    name: str
+    quantity: int
+    price: float
 
-    id: Optional[int] = None
+class OrderBase(BaseModel):
+    items: List[OrderItem]
+    total_price: float
+
+class OrderCreate(OrderBase):
     restaurant_id: int
+
+class OrderResponse(OrderBase):
+    id: int
+    status: str
+    paid_account: bool
+
+    class Config:
+        orm_mode = True
