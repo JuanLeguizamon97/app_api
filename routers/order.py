@@ -39,6 +39,19 @@ def read_orders(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No orders found")
     return orders
 
+@order_router.get("/pending/{restaurant_id}", response_model=list[OrderResponse])
+def get_pending_orders(restaurant_id: int, db: Session = Depends(get_db)):
+    # Filtrar órdenes pendientes del restaurante por `restaurant_id` y `status=False` (pendiente)
+    pending_orders = db.query(OrderModel).filter(
+        OrderModel.restaurant_id == restaurant_id,
+        OrderModel.status == False  # False indica que la orden está pendiente
+    ).all()
+    
+    if not pending_orders:
+        raise HTTPException(status_code=404, detail="No pending orders found for this restaurant")
+    
+    return pending_orders
+
 # Eliminar una orden por su ID
 @order_router.delete("/{order_id}", status_code=204)
 def delete_existing_order(order_id: int, db: Session = Depends(get_db)):
