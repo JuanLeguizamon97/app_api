@@ -6,7 +6,7 @@ class Order(Base):
 
     __tablename__ = "orders"
 
-    id = Column(Integer, primary_key=True)
+    order_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     restaurant_id = Column(Integer, ForeignKey('restaurant_users.id'), nullable=False)
     items = Column(String)  # Puede ser un JSON para almacenar los detalles de los artículos
