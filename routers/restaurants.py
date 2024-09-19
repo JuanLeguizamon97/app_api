@@ -14,7 +14,7 @@ restaurant_router = APIRouter(
     dependencies=[Depends(JWTBearer())]
 )
 
-@restaurant_router.post("/", response_model=RestaurantModel, status_code=201) #Añadir un schema para la respuesta de la creación del usuario restaurante
+@restaurant_router.post("/", response_model=None, status_code=201) #Añadir un schema para la respuesta de la creación del usuario restaurante
 def create_new_restaurant(restaurant: RestaurantProfile, db: Session = Depends(get_db)): #Crear el esquema de creación del perfil de restuarante
     try:
         new_profile= create_restaurant(db, restaurant)

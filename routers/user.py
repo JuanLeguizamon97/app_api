@@ -10,10 +10,10 @@ from schemas.user import UserBase, UserCreate, UserResponse
 user_router = APIRouter(
     prefix='/users',
     tags=['users'],
-    dependencies=Depends(JWTBearer())
+    dependencies=[Depends(JWTBearer())]
 )
 
-@user_router.post('/', respoonse_model= UserResponse, status_code=201)
+@user_router.post('/', response_model= UserResponse, status_code=201)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     try:
         new_user= create_user(db, user)

@@ -6,3 +6,6 @@ class RestaurantProfile(BaseModel):
     restaurant_name: str
     email: str
     password: str
+
+    class Config:
+        rom_attributes = True

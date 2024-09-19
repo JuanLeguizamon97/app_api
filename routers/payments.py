@@ -11,11 +11,11 @@ from schemas.payment import PaymentInfo, PaymentCreate
 payment_router = APIRouter(
     prefix="/payments",
     tags=['payments'],
-    dependencies=[Depends[JWTBearer()]]
+    dependencies=[Depends(JWTBearer())]
 )
 
 #Crear nuevo pago
-@payment_router.post("/", response_model=PaymentModel, status_code=201)
+@payment_router.post("/", response_model=None, status_code=201)
 def create_new_payment(payment: PaymentCreate, db: Session = Depends(get_db)):
     try:
         new_payment_creation = new_payment(db, payment)
