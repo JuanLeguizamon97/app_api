@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.restaurant import Restaurants
+from models.business import Restaurants
 from schemas.restaurant import RestaurantProfile
 
 def create_restaurant(db: Session, restaurant: RestaurantProfile):

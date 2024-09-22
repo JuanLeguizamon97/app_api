@@ -19,6 +19,12 @@ invoice_router = APIRouter(
 def create_new_invoice(invoice: InvoiceGeneration, db: Session= Depends(get_db)):
     try:
         new_invoice = create_invoice(db, invoice)
-        return new_invoice
+        return JSONResponse(status_code=200, content={'message':'Factura creada correctamente'}), new_invoice
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+@invoice_router.get("/{user_id}", response_model=None)
+def get_invoices_per_user(id: int, invoice: InvoiceGeneration, db: Session= Depends(get_db)) #cambiar de InvoiceGeneration a InvoiceResponse
+    try:
+        user_invoices = get_invoices(db, invoice)
+     

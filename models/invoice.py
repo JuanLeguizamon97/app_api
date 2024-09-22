@@ -9,6 +9,7 @@ class Invoice(Base):
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+    business_id = Column(Integer, ForeignKey('business.id'), nullable= False)
     total_price = Column(Float, nullable=False)
     taxes = Column(Float, nullable=False)
     total_with_taxes = Column(Float, nullable=False)

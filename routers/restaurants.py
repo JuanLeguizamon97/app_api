@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from config.database import get_db
 from middlewares.jwt_bearer import JWTBearer
-from models.restaurant import Restaurants as RestaurantModel
+from models.business import Restaurants as RestaurantModel
 from services.restaurant import create_restaurant, get_restaurants
 from schemas.restaurant import RestaurantProfile
 

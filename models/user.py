@@ -10,6 +10,7 @@ class User(Base):
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
+    phone_number = Column(Integer, nullable=False)
     is_active = Column(Boolean, default=True)
 
     orders = relationship("Order", back_populates="user")
