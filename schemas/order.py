@@ -12,7 +12,7 @@ class OrderBase(BaseModel):
     total_price: float
 
 class OrderCreate(OrderBase):
-    restaurant_id: int
+    business_id: int
 
 class OrderResponse(OrderBase):
     id: int

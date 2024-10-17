@@ -9,9 +9,11 @@ class Payment(Base):
     payment_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+    business_id = Column(Integer, ForeignKey('business.id', nullable = False))
     amount = Column(Float, nullable=False)
     payment_method = Column(String, nullable=False)  # credit_card,debit_card, paypal, etc.
     payment_status = Column(String, default='pending')  # pending, completed, failed
 
     user = relationship("User")
     order = relationship("Order")
+    business = relationship("Business")

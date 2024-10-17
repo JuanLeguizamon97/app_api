@@ -16,6 +16,7 @@ class ItemModel(BaseModel):
     description: Optional[str]
     price: float
     available: bool
+    quantity: int
 
     class Config:
         from_attributes = True 

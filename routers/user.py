@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from config.database import get_db
+from config.database import db_session
 from sqlalchemy.orm import Session
 from models.user import User as UserModel
 from middlewares.jwt_bearer import JWTBearer
@@ -14,7 +14,7 @@ user_router = APIRouter(
 )
 
 @user_router.post('/', response_model= UserResponse, status_code=201)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_user(user: UserCreate, db: Session = Depends(db_session)):
     try:
         new_user= create_user(db, user)
         return new_user
@@ -22,14 +22,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail= str(e))
     
 @user_router.get('/{user_id}', response_model= UserResponse, status_code=200)
-def get_user(user_id: int, db: Session = Depends(get_db)):
+def get_user(user_id: int, db: Session = Depends(db_session)):
     user = get_user(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail='user not found')
     return user
 
 @user_router.delete('/{user_id}', status_code=204)
-def delete_existing_user(user_id: int, db: Session = Depends(get_db)):
+def delete_existing_user(user_id: int, db: Session = Depends(db_session)):
     user = get_user(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail='User not found')

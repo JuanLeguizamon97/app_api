@@ -12,5 +12,6 @@ class Item(Base):
     price = Column(Float, nullable=False)
     stock = Column(Integer, nullable=False)
     available = Column(Boolean, default=True)
+    image = Column(String)
 
     restaurant = relationship("Restaurant", back_populates="items")

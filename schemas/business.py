@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 from typing import List, Dict
 
-class RestaurantProfile(BaseModel):
-    restaurant_id: int
-    restaurant_name: str
+class BusinessProfile(BaseModel):
+    business_id: int
+    business_name: str
     email: str
     password: str
 

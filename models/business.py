@@ -2,9 +2,9 @@ from config.database import Base
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 
-class Restaurants(Base):
+class Business(Base):
 
-    __tablename__ = "restaurants"
+    __tablename__ = "business"
 
     business_id = Column(Integer, primary_key=True)
     business_name = Column(String, unique=True, nullable=False)
